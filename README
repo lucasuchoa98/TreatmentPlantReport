@@ -1,0 +1,19 @@
+This repository helps the user automatically generate reports (output -> .pdf) from a database (input >.xlsx).
+
+The relators have the same struture, 5 chapters.
+
+1 - DADOS DO RESPONSÁVEL PELA ETE
+contains a table with registration data
+
+2 - ESTAÇÃO DE TRATAMENTO
+contains a description text of a treatment plant
+
+3 - ATIVIDADES REALIZADAS
+contains a description text with activities carried out during the month
+
+4 - RESULTADOS DAS ANÁLISES
+contains some text, a data table and a text from a data
+
+5 - CONCLUSÃO
+contains a standard text with some variations from a data
+
