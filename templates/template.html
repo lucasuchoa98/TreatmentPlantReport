@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+{% block content %}
+  <table>
+    <tr>
+      <td>
+        <img class="image" src="C:\RelatoriosETE\logo.png" alt='logo analise' height=50>
+      </td>
+      <td>
+        <h4> Relatório mensal de Operação da ETE do {{cliente}} - {{data}} </h4>
+      </td>
+    </tr>
+  </table>
+  <h4>1 - DADOS DO RESPONSÁVEL PELA ETE</h4>
+  <table class="tabela">
+    <thead>
+      <tr>
+        {% for coluna in colunas2 %}
+        
+          <th class="c2">{{coluna}}</th>
+        
+        {% endfor %}
+        </tr>  
+    </thead>
+    <tbody>
+      <tr>
+        {% for row in df2 %}
+          <tr>
+          {% for k, v in row.items() %}
+            {% if v == 'a' %}
+              <td><div class="red-circle">{{ row.letter }}</div></td>
+            {% else %}
+              <td><div>{{ v }}</div></td>
+            {% endif %}
+          {% endfor %}
+          </tr>
+        {% endfor %}
+      </tr>
+    </tbody>
+  </table>
+  <table class="tabela">
+  <h4>2 - ESTAÇÃO DE TRATAMENTO</h4>
+  <p>{{cap2_text}}</p>
+
+  <h4>3 - ATIVIDADES REALIZADAS</h4>
+  <ul>
+    <li>Monitoramento diário;</li>
+    <li>Limpeza no gradeamento; e</li>
+    <li>Coleta para análises;</li>
+  </ul>
+
+  <h4>4 - RESULTADOS DAS ANÁLISES</h4>
+  <p> Os resultados analíticos obtidos em ensaios realizados das amostras coletadas no mês de {{data}} encontram-se na Tabela 1.
+    <caption>Tabela 1 - Resultado das Análises.</caption>
+    <thead>
+      <tr>
+        {% for coluna in colunas1 %}     
+          <th class="c2">{{coluna}}</th>      
+        {% endfor %}
+        </tr>  
+    </thead>
+    <tbody>
+      <tr>
+      {% for row in df1 %}
+        <tr>
+        {% for k, v in row.items() %}
+          {% if v == 'a' %}
+            <td><div class="red-circle">{{ row.letter }}</div></td>
+          {% else %}
+            <td><div>{{ v }}</div></td>
+          {% endif %}
+        {% endfor %}
+        </tr>
+      {% endfor %}
+      </tr>
+    </tbody>
+  </table>
+  <p class="legenda"> Legenda: S/E - Sem especificação </p>
+  <p class="legenda"> Fonte: Análise Ambiental, {{ano}}. </p>
+  <br>
+  <p> {{ cap4_text }} </p>
+  <h4> 5- CONCLUSÃO </h4>
+  <p> {{cap5_text}} </p>
+  <br>
+  <div class="assinatura">
+    <p class="localdata"> {{hoje}} </p>
+    <figure>
+      <img class="image" src="C:\RelatoriosETE\ASSINATURA_DIGITAL.png" alt='assinatura Lucas' height=50>
+      <figcaption> Lucas M. Uchôa</figcaption>
+      <figcaption> Analista Ambiental</figcaption>
+    </figure>
+  </div> 
+  
+{% endblock %}
