@@ -75,30 +75,8 @@ def plot_bar(parametro:str, cliente:str, dataframe:pd.DataFrame):
         )
 
     fig.write_image("figura.png", engine="kaleido")
-    
-def plot_table(dataframe):
-    df_copy = dataframe.copy()
-    table_fig = go.Figure(data=[go.Table(
-        header=dict(values=list(df_copy.columns),
-                    fill_color='paleturquoise',
-                    line_color='darkslategray',
-                    align='left'),
-        cells=dict(values=[df_copy.Ponto, df_copy.Parâmetro, df_copy.Unidade,  df_copy.Data, df_copy.Resultado],
-                line_color='darkslategray',
-                fill_color='white',
-                align='left'))
-    ])
 
-    table_fig.update_layout(
-        margin=dict(l=10,r=10,b=10,t=10)
-        )   
-    table_fig.write_image('table.png', engine="kaleido", width=700, height=330)
 
-    """
-    plotly.io.write_image(fig,file='pltx.png', format='png', width=700, height=450)
-    pltx=(os.getcwd()+'/'+"pltx.png")
-
-    """
     
 def cap4_text(dataframe:pd.DataFrame, cliente:str) -> str:
     """
@@ -117,7 +95,7 @@ def cap4_text(dataframe:pd.DataFrame, cliente:str) -> str:
     eficiencia_conc = 'Regular'
     alem_da_conama = False
     parametros_fora = ""
-    
+    print("Cheguei aqui antes do zip!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     for parametro, resultado in zip(df_copy.Parâmetro, df_copy.Resultado):
         if parametro.lower() == 'ph':
             if resultado<lim_conama430['ph'][0] or resultado>lim_conama430['ph'][1]:
@@ -134,7 +112,7 @@ def cap4_text(dataframe:pd.DataFrame, cliente:str) -> str:
             elif resultado>lim_conama430[parametro.lower()]:
                 todos = False
                 parametros_fora = parametros_fora+","+parametro           
-                
+    print("Cheguei aqui depois do zip!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")           
     if todos == True:
         texto1 = f"Todos os parâmetros atenderam as especificações dispostas na Resolução do CONAMA nº 430/11. "
     else:
@@ -264,7 +242,7 @@ if __name__ == "__main__":
     #parametro = "DBO"
     
     ###carregar os dados das ETE para fazer a tabela
-    filePath = r'H:\Meu Drive\Monitoramento\Resultados ETE2.xlsx'
+    filePath = r'H:\Meu Drive\_Lucas\Controle de Qualidade\Dados\Resultados ETE2.xlsx'
     sheet_name = 'Acompanhamento da ETE'
     original_df = pd.read_excel(io=filePath, sheet_name=sheet_name, header=1)
     clientes_list = original_df['Cliente'].unique()
@@ -293,14 +271,15 @@ if __name__ == "__main__":
                     iter_df = filter_by_client(df_copy, cliente).copy()
                     iter_df = filter_by_date(iter_df, date=data_relatorio)
                     iter_df['Data'] = iter_df['Data'].dt.strftime('%d-%m-%Y')
-                    iter_df['Resultado'] = iter_df['Resultado'].apply(lambda x: round(x,2) if isinstance(x,float) else x) 
+                    iter_df['Resultado'] = iter_df['Resultado'].apply(lambda x: round(x,2) if isinstance(x,float) else x)
+                    print(iter_df)
                 except:
                     print(cliente, ' não tem dado')
 
                 #df = filter_by_param(df,param=parametro)
                 
                 ### Carregar os dados dos responsaveis pelas ETE
-                filePath2 = r'H:\Meu Drive\Monitoramento\dados_ete.xlsx'
+                filePath2 = r'H:\Meu Drive\_Lucas\Controle de Qualidade\Dados\dados_ete.xlsx'
                 sheet_name2 = 'responsavel'
                 df_responsavelETE = pd.read_excel(io=filePath2,sheet_name=sheet_name2)
                 df_responsavelETE = df_responsavelETE.set_index('Cliente')
@@ -310,7 +289,7 @@ if __name__ == "__main__":
                     print(f"{cliente} sem responsavel")
                 
                 ### Carregar os dados da descricao das ETE
-                filePath3 = r'H:\Meu Drive\Monitoramento\dados_ete.xlsx'
+                filePath3 = r'H:\Meu Drive\_Lucas\Controle de Qualidade\Dados\dados_ete.xlsx'
                 sheet_name3 = 'desc_ete_sheet'
                 df_descETE = pd.read_excel(io=filePath3,sheet_name=sheet_name3)
                 df_descETE = df_descETE.set_index('Cliente')
@@ -322,7 +301,8 @@ if __name__ == "__main__":
                 
                 
                 data_str = get_data_str(ano, mes)
-                
+                cap4_text_str = ""
+                cap5_text_str = ""
                 try:
                     cap4_text_str = cap4_text(iter_df, cliente=cliente)
                 except:
@@ -362,7 +342,7 @@ if __name__ == "__main__":
                     #df = filter_by_param(df,param=parametro)
                     
                     ### Carregar os dados dos responsaveis pelas ETE
-                    filePath2 = r'H:\Meu Drive\Monitoramento\dados_ete.xlsx'
+                    filePath2 = r'H:\Meu Drive\_Lucas\Controle de Qualidade\Dados\dados_ete.xlsx'
                     sheet_name2 = 'responsavel'
                     df_responsavelETE = pd.read_excel(io=filePath2,sheet_name=sheet_name2)
                     df_responsavelETE = df_responsavelETE.set_index('Cliente')
@@ -372,7 +352,7 @@ if __name__ == "__main__":
                         print(f"{cliente} sem responsavel")
                     
                     ### Carregar os dados da descricao das ETE
-                    filePath3 = r'H:\Meu Drive\Monitoramento\dados_ete.xlsx'
+                    filePath3 = r'H:\Meu Drive\_Lucas\Controle de Qualidade\Dados\dados_ete.xlsx'
                     sheet_name3 = 'desc_ete_sheet'
                     df_descETE = pd.read_excel(io=filePath3,sheet_name=sheet_name3)
                     df_descETE = df_descETE.set_index('Cliente')
@@ -384,16 +364,18 @@ if __name__ == "__main__":
                     
                     
                     data_str = get_data_str(ano, mes)
+                    cap4_text_str = ""
+                    cap5_text_str = ""
                     
                     try:
                         cap4_text_str = cap4_text(iter_df, cliente=cliente)
                     except:
-                        print('Erro na obtencao do texto do capitulo 4')
+                        print('Erro na obtencao do texto do capitulo 4, verifique se existem dados no ano/mes digitado')
 
                     try:
                         cap5_text_str = cap_5_text(iter_df, cliente=cliente)
                     except:
-                        print('Erro na obtencao do texto do capitulo 5')
+                        print('Erro na obtencao do texto do capitulo 5, verifique se existem dados no ano/mes digitado')
                     
                         
                     render_html(df1=iter_df, 
