@@ -1,0 +1,153 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="capa">
+  <div class="imgcapa">
+    <img  src="C:\RelatoriosETE\logo.png" alt='logo analise' height=75 >
+  </div>
+  <br>
+  <br>
+  <h4 class="titulocapa"> ESTAÇÃO DE TRATAMENTO DE ESGOTO </h4>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <hr>
+  <h4 class="titulocapa2"> <strong> RELATÓRIO DE OPERAÇÃO E MONITORAMENTO DA ETE </strong> </h4>
+  <h4 class="titulocapa">{{cliente}}</h4>
+  <hr>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <h4 class="titulocapa"> {{hoje}} </h4>
+</div>
+
+  <table>
+    <tr>
+      <td>
+        <img class="image" src="C:\RelatoriosETE\logo.png" alt='logo analise' height=50>
+      </td>
+      <td>
+        <h4 style="color:#144275;"> <strong> RELATÓRIO DE OPERAÇÃO E MONITORAMENTO DA ETE </strong> </h4>
+        <h4> {{cliente}} - {{data}} </h4> 
+      </td>
+    </tr>
+  </table>
+  <h4> <strong> 1. DADOS DO RESPONSÁVEL PELA ETE </strong> </h4>
+
+<!--
+  <table class="tabela">
+    <thead>
+      <tr>
+        {% for coluna in colunas2 %}
+        
+          <th class="c2">{{coluna}}</th>
+        
+        {% endfor %}
+        </tr>  
+    </thead>
+
+    <tbody>
+      <tr>
+        {% for row in df2 %}
+          <tr>
+          {% for k, v in row.items() %}
+            {% if v == 'a' %}
+              <td><div class="red-circle">{{ row.letter }}</div></td>
+            {% else %}
+              <td><div>{{ v }}</div></td>
+            {% endif %}
+          {% endfor %}
+          </tr>
+        {% endfor %}
+      </tr>
+    </tbody>
+  </table>
+
+-->
+
+  {% for row in df2 %}         
+    {% for k, v in row.items() %}
+      <p> <strong> {{ k }} </strong>{{ v }} </p>
+    {% endfor %}
+  {% endfor %}
+
+  <table class="tabela">
+
+  <h4> <strong> 2. INTRODUÇÃO </strong> </h4>
+  <p> Este documento tem como finalidade apresentar o parecer técnico de desempenho da estação de tratamento de esgoto, referente ao mês de {{data}}, que recebe os efluentes líquidos gerados a partir da operação do(a) {{cliente}}.</p>
+  <h4> <strong> 3. DESCRIÇÃO DO TIPO DE TRATAMENTO </strong> </h4>
+  <p>{{cap2_text}}</p>
+
+  <h4> <strong> 4. ATIVIDADES REALIZADAS </strong> </h4>
+  <p> Durante o periodo de referencia foram realizados: monitoramento diário do sistema e limpeza de equipamentos do pré-tratamento. Além disso, para avaliar o desempenho do sistema, foram realizadas coletas de amostras nos pontos de entrada e saída da ETE. </p>
+
+  <h4> <strong> 5. MONITORAMENTO </strong> </h4>
+  <p> Os resultados dos ensaios analíticos obtidos a partir de ensaios realizados em amostras coletadas na entrada e saída do sistema de tratamento, no mês de {{data}}, encontram-se na Tabela 1.
+    <caption>Tabela 1 - Resultado das Análises. Fonte: Análise Ambiental, {{ano}}.</caption>
+    <thead>
+      <tr>
+        {% for coluna in colunas1 %}     
+          <th class="c2">{{coluna}}</th>      
+        {% endfor %}
+        </tr>  
+    </thead>
+    <tbody>
+      <tr>
+      {% for row in df1 %}
+        <tr>
+        {% for k, v in row.items() %}
+          {% if v == 'a' %}
+            <td><div class="red-circle">{{ row.letter }}</div></td>
+          {% else %}
+            <td><div>{{ v }}</div></td>
+          {% endif %}
+        {% endfor %}
+        </tr>
+      {% endfor %}
+      </tr>
+    </tbody>
+  </table>
+  <p class="legenda"> Legenda: S/E - Sem especificação </p>
+  <p> {{ cap4_text }} </p>
+  <h4> <strong> 6. CONCLUSÃO </strong> </h4>
+  <p> {{cap5_text}} </p>
+  <div class="assinatura">
+    <p class="localdata"> {{hoje}} </p>
+    <figure>
+      <img class="image" src="C:\RelatoriosETE\ASSINATURA_DIGITAL.png" alt='assinatura Lucas' height=50>
+      <figcaption> Lucas M. Uchôa | Eng. Ambiental e Sanitarista </figcaption>
+    </figure>
+  </div> 
+  
+{% endblock %}

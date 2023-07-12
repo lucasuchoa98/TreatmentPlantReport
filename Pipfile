@@ -13,6 +13,7 @@ fpdf = "*"
 jinja2 = "*"
 flask = "*"
 pdfkit = "*"
+prettyprinter = "*"
 
 [dev-packages]
 ipykernel = "*"
