@@ -31,12 +31,12 @@ def filter_by_client(dataframe:pd.DataFrame, client:str) -> pd.DataFrame:
     """  
     result = dataframe.loc[[client]].copy()
     
-    print('Tabela de atributos filtrado pelo cliente com sucesso!')     
+    #print('Tabela de atributos filtrado pelo cliente com sucesso!')     
     
     return result
 
 
-def filter_by_date(dataframe:pd.DataFrame,date:str, interval:bool=False, retro_month=6) -> pd.DataFrame:
+def filter_by_date(dataframe:pd.DataFrame, ano_filtro:str, mes_filtro :str, data_filtro:str, interval:bool=False, retro_month=6) -> pd.DataFrame:
     """Fitra a tabela de atributos a partir de uma determinada data
 
     Args:
@@ -50,9 +50,9 @@ def filter_by_date(dataframe:pd.DataFrame,date:str, interval:bool=False, retro_m
     """
     if interval==True:
         
-        date_str = datetime.strptime(date, '%Y-%m-%d')
+        date_str = datetime.strptime(data_filtro, '%Y-%m-%d')
         new_date = date_str - relativedelta(months=retro_month)
-        end_date = date
+        end_date = data_filtro
         start_date = new_date.strftime('%Y-%m-%d')
         
         mask = (dataframe['Data'] >= start_date) & (dataframe['Data'] <= end_date)
@@ -60,9 +60,17 @@ def filter_by_date(dataframe:pd.DataFrame,date:str, interval:bool=False, retro_m
         
     else:
         
-        result = dataframe[dataframe['Data'].dt.strftime('%Y-%m') == date].copy()
+        # Converter a coluna "Data" para o formato de data
+        dataframe['Data'] = pd.to_datetime(dataframe['Data'])
+        print(dataframe['Data'])
+
+        # Filtrar o DataFrame a partir de uma data específica
+        #data_filtro = pd.to_datetime(data_filtro)
+        result = dataframe[(dataframe['Data'].dt.month == int(mes_filtro)) & (dataframe['Data'].dt.year == int(ano_filtro))]
+        
+        #result = dataframe[dataframe['Data'].dt.strftime('%Y-%m') == date].copy()
     
-    print('Tabela de atributos filtrado pela data com sucesso!')
+    #print('Tabela de atributos filtrado pela data com sucesso!')
     
     return result
 
@@ -79,7 +87,7 @@ def filter_by_param(dataframe:pd.DataFrame, param:str) -> pd.DataFrame:
     """
     result = dataframe.loc[(dataframe['Parâmetro'])==param].copy()
     
-    print('Tabela de atributos filtrado pelo parâmetro com sucesso!')
+    #print('Tabela de atributos filtrado pelo parâmetro com sucesso!')
     
     return result
 
@@ -96,7 +104,7 @@ def filter_by_ponto(dataframe:pd.DataFrame, ponto:str) -> pd.DataFrame:
     """
     result = dataframe.loc[(dataframe['Ponto'])==ponto].copy()
 
-    print('Tabela de atributos filtrado pelo ponto com sucesso!')
+    #print('Tabela de atributos filtrado pelo ponto com sucesso!')
     
     return result
 
@@ -293,7 +301,7 @@ def render_html(df1:pd.DataFrame, df2:pd.DataFrame, cap2_text:str, cap4_text:str
     if cap4_text!="" and cap5_text!="":
         
         print(f"Gerando PDF {cliente} ... ")
-        pdf_path = f'Relatório_Mensal({data})-{cliente}.pdf'    
+        pdf_path = f'Relatório Mensal ({data}) - {cliente}.pdf'    
         html2pdf(filename, pdf_path)
         
     else:
@@ -328,7 +336,7 @@ def main(filePath:str, sheet_name:str, original_df: pd.DataFrame, clientes_list:
         print(f"Unexpected {err=}, {type(err)=}")
         raise
     try:
-        iter_df = filter_by_date(iter_df_client_filtered, date=data_relatorio)
+        iter_df = filter_by_date(iter_df_client_filtered, ano_filtro=ano, mes_filtro=mes, data_filtro=data_relatorio)
     except Exception as err:
         print(f"Unexpected {err=}, {type(err)=}")
         raise
@@ -373,7 +381,7 @@ def main(filePath:str, sheet_name:str, original_df: pd.DataFrame, clientes_list:
         cap2_text = df_descETE.values[0][0]
         
     except:
-        
+        cap2_text = ""
         print(f"{cliente} sem descricao de ete")
     
     data_str = get_data_str(ano, mes)
@@ -414,11 +422,12 @@ if __name__ == "__main__":
     # mode 1 = Todos os clientes
     # mode 2 = Cliente específico
     
-    run_mode = [1,2]
+    run_mode = [0,1,2]
     
     while True:
         
         print('Modos de operação:')
+        print('0 - Sair')
         print('1 - Gerar relatórios para todos os clientes')
         print('2 - Gerar relatório para cliente Específico')
         resposta = int(input('Digite o modo de Operação: ') or "2")
@@ -428,6 +437,26 @@ if __name__ == "__main__":
             print('A opção selecionada não esta na lista de modos disponíveis')
             
         else:
+            if resposta==0:
+                
+                exit()
+                                
+            # Todos os clientes
+            if resposta==1:
+                
+                msg_data_relatorio = 'Digite aqui o ano, mês e dia limite do(s) relatório(s) -> formato AAAA-MM: '
+                data_relatorio = input(msg_data_relatorio) or "2023-03"
+                ano, mes = data_relatorio.split("-")
+                
+                print(clientes_list)
+                
+                for cliente in clientes_list:
+                    
+                    main(filePath=filePath, sheet_name=sheet_name, 
+                         original_df=original_df, clientes_list=clientes_list, 
+                         data_relatorio=data_relatorio,mode=2, 
+                         cliente=cliente, ano=ano, mes=mes)
+                    print('-------------------------------\n-------------------------------')
             
             # Cliente específico
             if resposta==2:
@@ -441,16 +470,3 @@ if __name__ == "__main__":
                      original_df=original_df, clientes_list=clientes_list, 
                      mode=2, cliente=cliente, ano=ano, 
                      mes=mes, data_relatorio=data_relatorio)
-                
-            # Todos os clientes
-            if resposta==1:
-                
-                msg_data_relatorio = 'Digite aqui o ano, mês e dia limite do(s) relatório(s) -> formato AAAA-MM: '
-                data_relatorio = input(msg_data_relatorio) or "2023-03"
-                ano, mes = data_relatorio.split("-")
-                
-                print(clientes_list)
-                
-                for cliente in clientes_list:
-                    
-                    main(filePath=filePath, sheet_name=sheet_name, original_df=original_df, clientes_list=clientes_list, mode=2, cliente=cliente, ano=ano, mes=mes)
