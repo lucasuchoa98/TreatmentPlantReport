@@ -265,7 +265,7 @@ if __name__ == "__main__":
                 print(clientes_list)
                 cliente = input('Digite aqui o nome do um cliente: ')
                 #data_relatorio = '2022-12'
-                data_relatorio = input('Digite aqui o ano e o mês do(s) relatório(s) -> formato AAAA-MM: ')              
+                data_relatorio = input('Digite aqui o ano e o mês do(s) relatório(s) -> formato AAAA-MM: ') or '2023-05'         
                 ano, mes = data_relatorio.split("-")
                 try:
                     iter_df = filter_by_client(df_copy, cliente).copy()
