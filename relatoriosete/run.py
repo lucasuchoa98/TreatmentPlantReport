@@ -1,6 +1,3 @@
-## Alto da boa vista e Parque Maceió
-
-
 #Importando as bibliotecas padrões
 from datetime import date
 from dateutil.relativedelta import relativedelta
@@ -182,29 +179,27 @@ def cap4_text(dataframe:pd.DataFrame, cliente:str) -> str:
     else:
         
         texto1 = f'Os resultados de {parametros_fora} não atenderam as especificações dispostas na Resolução CONAMA n° 430/2011. '
-    print('passei aqui2')
+
     ef_remo = filter_by_param(df_copy,param="Eficiência")
-    print('passei aqui3')
-    ef_remo = ef_remo['Resultado'].tolist()[0]
-    print('passei aqui4')
+
+    if ef_remo['Resultado'].size>1:
+        ef_remo = ef_remo['Resultado'].mean(numeric_only=True)
+        m_string = ' média '
+    else:
+        ef_remo = ef_remo['Resultado'].tolist()[0]
+        m_string = ' '
+
     ef_remo_str = str(ef_remo).replace(".",",")
-    print('passei aqui5')
     dbo = filter_by_param(df_copy, param="DBO")
-    print('passei aqui6')
     dbo_saida = filter_by_ponto(dbo, ponto='Saída')
-    print('passei aqui7')
     dbo_saida = dbo_saida['Resultado'].tolist()[0]
-    print('passei aqui8')
     dbo_saida_str = str(dbo_saida)
-    print('passei aqui9')
     dbo_entrada = filter_by_ponto(dbo, ponto='Entrada')
-    print('passei aqui10')
     dbo_entrada = dbo_entrada['Resultado'].tolist()[0]
-    print('passei aqui11')
     dbo_entrada_str = str(dbo_entrada)
-    print('passei aqui12')     
-    texto2 = f"A eficiência de remoção de matéria orgânica apresentada no processo foi de {ef_remo_str}%"
-    print('passei aqui13')
+  
+    texto2 = f"A eficiência de remoção de matéria orgânica{m_string}apresentada no processo foi de {ef_remo_str}%"
+
     if ef_remo >=60:
         
         texto3= f", valor consideravelmente acima dos 60% de eficiência de remoção estabelecido pela resolução supracitada."
@@ -233,7 +228,7 @@ def cap_5_text(dataframe:pd.DataFrame, cliente: str) -> str:
     """
     df_copy = dataframe.copy()
     ef_remo = filter_by_param(df_copy,param="Eficiência")
-    ef_remo = ef_remo['Resultado'].tolist()[0]
+    ef_remo = ef_remo['Resultado'].mean()
     
     if ef_remo<70:
         
